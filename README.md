@@ -1,24 +1,31 @@
 # vermeerhasbigmachines
 
-Private customer-share landing page for the **Vermeer × Microsoft Contact Center** follow-up,
-hosted on **GitHub Pages** (the SE-OS Pages pattern — `templates/agent-team/web_ui/DEPLOY.md`,
-Option A).
+Customer-facing **Vermeer × Microsoft Contact Center** engagement page, hosted on **GitHub Pages**
+using the **SE-OS leave-behind SHARE GATE pattern** (`gate.js`).
 
 - **Live URL:** https://billwhalenmsft.github.io/vermeerhasbigmachines/
-- **Front gate:** client-side passphrase (SHA-256 checked; plaintext is not in the source).
-  Share the passphrase out-of-band; it is not stored in this repo.
+- **Front gate:** `gate.js` — client-side passphrase (SHA-256) **+ expiry date**. Passphrase is
+  shared out-of-band; plaintext is not in the source. Hidden automatically after `CFG.expires`.
+- **Window:** expires **2026-08-24** (~60 days). To extend, bump `CFG.expires` in `gate.js`.
 - **Content:** external-safe recap only — one-platform value, capabilities mapped to Vermeer's
   evaluation with public Microsoft Learn links, before/after, next steps. **No internal or
-  confidential Microsoft content.**
+  confidential Microsoft content / no real customer data.**
 
-## How it deploys
-`.github/workflows/pages.yml` publishes `web_ui/` to GitHub Pages on every push to `main`.
-Enable once: **Settings → Pages → Source: GitHub Actions**.
+## The pattern
+Mirrors `billwhalenmsft/tennant-field-service-engagement`:
+- Flat repo root: `index.html` + `gate.js` (+ assets).
+- `index.html` references the gate as the **first** element in `<body>`:
+  `<script src="gate.js"></script>`.
+- GitHub Pages serves from `main` (root). Settings → Pages → Source: **Deploy from a branch → main / root**.
+
+`gate.js` is reusable: copy it into any customer leave-behind, set `CFG.title` / `subtitle` /
+`passHash` / `expires` / `contact`, and reference it as the first `<body>` script.
 
 ## Honest scope of the gate
 GitHub Pages is static hosting with **no server-side auth**, so the passphrase is a **soft
-display gate**, not a security boundary — appropriate because the content here is already
-external-safe. Take the repo private or delete it when the engagement window closes.
+display / controlled-distribution gate**, not a security boundary — appropriate because the
+content here is already external-safe. Take the repo private or delete it when the engagement
+window closes.
 
 ## Source of truth
 The ungated source page lives in the private SE-OS repo at

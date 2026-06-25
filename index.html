@@ -78,46 +78,9 @@
     .hero h1{ font-size:30px; }
   }
 </style>
-<style id="vg-hide">body>*:not(#vg-overlay){visibility:hidden}</style>
 </head>
 <body>
-<div id="vg-overlay" style="visibility:visible;position:fixed;inset:0;z-index:2147483647;background:#1A1320;color:#FFF8F3;font-family:'Segoe UI',system-ui,sans-serif;display:flex;align-items:center;justify-content:center;padding:24px;box-sizing:border-box">
-  <div style="max-width:420px;width:100%;text-align:center">
-    <div style="font-size:46px;line-height:1;margin-bottom:14px">🔒</div>
-    <h1 style="font-size:22px;margin:0 0 6px;font-weight:700">Vermeer × Microsoft</h1>
-    <p style="color:#C9BFD0;margin:0 0 22px;font-size:14px;line-height:1.5">This page is shared privately. Enter the passphrase you were given to continue.</p>
-    <form id="vg-form" autocomplete="off">
-      <input id="vg-pw" type="password" placeholder="Passphrase" autocomplete="off"
-        style="width:100%;padding:12px 14px;border-radius:9px;border:1px solid #4A3F55;background:#241B2E;color:#FFF8F3;font-size:15px;box-sizing:border-box;outline:none" />
-      <div id="vg-err" style="height:18px;color:#FF6B7D;font-size:12.5px;margin:8px 0 4px;visibility:hidden">Incorrect passphrase. Try again.</div>
-      <button type="submit"
-        style="width:100%;padding:11px 0;border:0;border-radius:9px;background:#F4364C;color:#fff;font-weight:700;font-size:15px;cursor:pointer">Unlock</button>
-    </form>
-    <p style="color:#6B6470;margin:18px 0 0;font-size:11px">Microsoft confidential-customer share · do not forward the passphrase</p>
-  </div>
-</div>
-<script>
-(function(){
-  var HASH="e16fbb82a3b353561063f240779f5d10d5ab63043c99674ed5b0d6c40d80ef5f";
-  var KEY="vg_vermeer_ok";
-  var ov=document.getElementById("vg-overlay");
-  var hide=document.getElementById("vg-hide");
-  function unlock(){ if(hide)hide.remove(); if(ov)ov.remove(); }
-  try{ if(sessionStorage.getItem(KEY)==="1"){ unlock(); return; } }catch(e){}
-  async function sha256(s){
-    var buf=await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
-    return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,"0");}).join("");
-  }
-  var form=document.getElementById("vg-form"), pw=document.getElementById("vg-pw"), err=document.getElementById("vg-err");
-  form.addEventListener("submit", async function(e){
-    e.preventDefault();
-    var h=await sha256(pw.value.trim());
-    if(h===HASH){ try{sessionStorage.setItem(KEY,"1");}catch(e){} unlock(); }
-    else { err.style.visibility="visible"; pw.value=""; pw.focus(); }
-  });
-  pw.focus();
-})();
-</script>
+<script src="gate.js"></script>
 
   <header class="hero">
     <div class="wrap inner">
