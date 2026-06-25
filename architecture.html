@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280, height=720">
+<title>Vermeer — Two Systems + a Carrier Tax → One Platform</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root{
+    --coral:#F4364C; --magenta:#C03BC4; --purple:#8661C5; --orange:#FF5C39;
+    --ink:#1A1320; --cream:#FFF8F3; --line:#E7DCD4; --gray:#6B6470;
+    --red:#C9223A; --redbg:#FBE9EC; --green:#1E7A52; --greenbg:#E7F4ED; --blue:#0B5CD8;
+  }
+  body{ font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif;
+        background:var(--cream); color:var(--ink); width:1280px; height:720px; overflow:hidden; position:relative; }
+  .eyebrow{ position:absolute; top:30px; left:44px; font-size:13px; font-weight:700; letter-spacing:2px; color:var(--purple); }
+  h1{ position:absolute; top:50px; left:44px; font-size:31px; font-weight:300; letter-spacing:-0.4px; }
+  h1 b{ font-weight:700; }
+  .pagenum{ position:absolute; top:34px; right:44px; font-size:12px; color:var(--gray); }
+
+  .stage{ position:absolute; top:108px; left:44px; right:44px; bottom:96px; display:flex; gap:0; align-items:stretch; }
+  .panel{ flex:1; border-radius:14px; padding:18px 20px; position:relative; }
+  .before{ background:var(--redbg); border:1px solid #F3C9D1; }
+  .after { background:var(--greenbg); border:1px solid #C6E4D3; }
+  .phead{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px; }
+  .ptag{ font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase; }
+  .before .ptag{ color:var(--red); }
+  .after .ptag{ color:var(--green); }
+  .psub{ font-size:12px; color:var(--gray); }
+  .ptitle{ font-size:18px; font-weight:700; margin:2px 0 16px; }
+
+  /* BEFORE: stacked silo boxes with seams */
+  .silo{ background:#fff; border:1px solid #E9C7CF; border-radius:9px; padding:11px 13px; margin-bottom:9px; position:relative; }
+  .silo .nm{ font-size:13px; font-weight:700; color:#7A2E3B; }
+  .silo .ds{ font-size:10.5px; color:var(--gray); margin-top:2px; }
+  .silo .vend{ position:absolute; top:11px; right:13px; font-size:9px; font-weight:700; color:#b06; background:#FCE2E6; border-radius:9px; padding:2px 8px; }
+  .seam{ text-align:center; font-size:10px; font-weight:700; color:var(--red); margin:-3px 0 6px; }
+  .seam span{ background:var(--redbg); padding:0 8px; }
+  .seamline{ border-top:1px dashed #E9A9B5; position:relative; top:8px; }
+
+  .pain{ margin-top:6px; background:#fff; border-left:3px solid var(--red); border-radius:4px; padding:9px 11px; font-size:11px; color:#7A2E3B; line-height:1.4; }
+  .pain b{ color:var(--red); }
+
+  /* ARROW */
+  .arrowcol{ width:74px; display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:2; }
+  .arrowcircle{ width:54px; height:54px; border-radius:50%; background:var(--ink); color:#fff; display:flex; align-items:center; justify-content:center; font-size:26px; box-shadow:0 6px 16px rgba(0,0,0,.18); }
+  .arrowlbl{ font-size:9px; font-weight:700; color:var(--gray); text-align:center; margin-top:8px; line-height:1.25; text-transform:uppercase; letter-spacing:.5px; }
+
+  /* AFTER: one platform with layers */
+  .platform{ background:#fff; border:1.5px solid var(--green); border-radius:12px; padding:14px; }
+  .pf-title{ text-align:center; font-size:13px; font-weight:800; color:var(--green); margin-bottom:11px; }
+  .layer{ display:flex; gap:7px; margin-bottom:7px; }
+  .cap{ flex:1; background:var(--greenbg); border:1px solid #C6E4D3; border-radius:8px; padding:8px 6px; text-align:center; font-size:11px; font-weight:700; color:#13533a; line-height:1.2; }
+  .data{ background:var(--ink); color:#fff; border-radius:8px; padding:9px; text-align:center; font-size:11.5px; font-weight:700; margin-top:4px; }
+  .data span{ font-weight:400; color:#C9C0D2; font-size:10px; display:block; margin-top:2px; }
+  .teams{ margin-top:9px; background:#EAF1FF; border:1px solid #C2D6FB; border-radius:8px; padding:9px 11px; font-size:11.5px; color:#143a82; }
+  .teams b{ color:var(--blue); }
+
+  .feat{ display:flex; gap:7px; margin-top:12px; }
+  .ft{ flex:1; background:#fff; border:1px solid #C6E4D3; border-radius:9px; padding:9px 7px; text-align:center; }
+  .ft .n{ display:block; font-size:14px; font-weight:800; color:var(--green); line-height:1.1; }
+  .ft .l{ display:block; font-size:9.5px; color:var(--gray); margin-top:3px; }
+
+  .foot{ position:absolute; left:44px; right:44px; bottom:30px; height:48px; background:var(--ink); border-radius:11px; display:flex; align-items:center; padding:0 22px; }
+  .foot .big{ color:#fff; font-size:16px; font-weight:300; }
+  .foot .big b{ font-weight:700; }
+  .foot .chip{ margin-left:auto; background:var(--purple); color:#fff; font-size:11px; font-weight:700; border-radius:16px; padding:6px 14px; }
+  .src{ position:absolute; bottom:9px; left:46px; font-size:9px; color:var(--gray); }
+</style>
+</head>
+<body>
+<script src="gate.js"></script>
+  <div class="eyebrow">ENTERPRISE INTEGRATION · THE COST STORY</div>
+  <h1>From <b>two systems + a carrier tax</b> to <b>one platform</b></h1>
+  <div class="pagenum">Vermeer × Microsoft · Contact Center RFP</div>
+
+  <div class="stage">
+    <!-- BEFORE -->
+    <div class="panel before">
+      <div class="phead">
+        <span class="ptag">● Typical competitor bid</span>
+        <span class="psub">3 products, 3 contracts</span>
+      </div>
+      <div class="ptitle">CCaaS + CRM + carrier, stitched</div>
+
+      <div class="silo"><span class="vend">Vendor A</span><div class="nm">CCaaS platform</div><div class="ds">Voice, IVR, routing — its own walled garden</div></div>
+      <div class="seam"><div class="seamline"></div><span>↕ integration + data sync</span></div>
+      <div class="silo"><span class="vend">Vendor B</span><div class="nm">Separate CRM / ticketing</div><div class="ds">Cases, knowledge — a different data model</div></div>
+      <div class="seam"><div class="seamline"></div><span>↕ telephony contract</span></div>
+      <div class="silo"><span class="vend">Carrier</span><div class="nm">Telephony carrier</div><div class="ds">PSTN minutes — billed per leg</div></div>
+
+      <div class="pain">
+        <b>The transfer tax:</b> an expert/internal transfer is billed as a <b>second call leg</b> — finance gets surprised. Plus integration cost, two support contracts, and data that drifts between systems.
+      </div>
+    </div>
+
+    <!-- ARROW -->
+    <div class="arrowcol">
+      <div class="arrowcircle">→</div>
+      <div class="arrowlbl">One data model.<br>One bill.</div>
+    </div>
+
+    <!-- AFTER -->
+    <div class="panel after">
+      <div class="phead">
+        <span class="ptag">● Microsoft — Dynamics 365</span>
+        <span class="psub">one platform</span>
+      </div>
+      <div class="ptitle">Voice + digital + CRM + AI, unified</div>
+
+      <div class="platform">
+        <div class="pf-title">Dynamics 365 Contact Center + Customer Service</div>
+        <div class="layer">
+          <div class="cap">Voice &amp; IVR</div>
+          <div class="cap">Chat · Email · SMS</div>
+          <div class="cap">Cases &amp; Knowledge</div>
+        </div>
+        <div class="layer">
+          <div class="cap">Unified Routing</div>
+          <div class="cap">Copilot &amp; AI agents</div>
+          <div class="cap">Analytics</div>
+        </div>
+        <div class="data">One Dataverse data model<span>shared across every channel &amp; the CRM — no sync, no drift</span></div>
+        <div class="teams">Enterprise voice on <b>Teams Phone / Direct Routing</b> — reuse your carrier &amp; numbers (BYOC). Internal &amp; expert transfers ride Teams, <b>not a second carrier leg</b>.</div>
+      </div>
+
+      <div class="feat">
+        <div class="ft"><span class="n">1 platform</span><span class="l">not 3 products</span></div>
+        <div class="ft"><span class="n">1 bill</span><span class="l">no integration tax</span></div>
+        <div class="ft"><span class="n">No 2-leg tax</span><span class="l">transfers on Teams</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span class="big"><b>Simplicity + AI = Acceleration.</b> &nbsp;One platform, one data model, one bill.</span>
+    <span class="chip">NATIVE + TEAMS · Direct Routing</span>
+  </div>
+  <div class="src">Illustrative architecture. Enterprise voice via Teams Phone / Azure Communication Services direct routing (bring-your-own-carrier). Final licensing confirmed with Vermeer + BizApps desk.</div>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vermeer Contact Center — Live Wallboard</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  :root{
+    --bg:#0B0E14; --panel:#151A26; --panel2:#1B2230; --line:#283142;
+    --txt:#EEF1F7; --muted:#8B94A8; --dim:#5C6678;
+    --green:#22C786; --amber:#FFB020; --red:#FF4D5E; --blue:#3DA5FF;
+    --yellow:#FFCD00; /* Vermeer accent */
+    --purple:#8661C5;
+  }
+  html,body{height:100%;}
+  body{
+    background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(134,97,197,.16), transparent 60%),
+      radial-gradient(1000px 500px at -5% 110%, rgba(61,165,255,.12), transparent 60%),
+      var(--bg);
+    color:var(--txt); font-family:"Segoe UI",-apple-system,BlinkMacSystemFont,sans-serif;
+    width:100vw; height:100vh; overflow:hidden; display:flex; flex-direction:column;
+    padding:1.6vh 1.8vw;
+  }
+  /* ===== TOP BAR ===== */
+  .top{display:flex;align-items:center;justify-content:space-between;height:8.5vh;}
+  .brand{display:flex;align-items:center;gap:1vw;}
+  .logo{font-weight:900;font-size:2.6vh;letter-spacing:.5px;color:#0B0E14;background:var(--yellow);
+        padding:.5vh 1vw;border-radius:.7vh;line-height:1;}
+  .brand .sub{font-size:1.5vh;letter-spacing:3px;color:var(--muted);font-weight:700;text-transform:uppercase;}
+  .clock{display:flex;align-items:center;gap:1.4vw;}
+  .clock .time{font-size:3.2vh;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:1px;}
+  .clock .date{font-size:1.5vh;color:var(--muted);text-align:right;}
+  .live{display:flex;align-items:center;gap:.5vw;font-size:1.5vh;font-weight:800;letter-spacing:2px;color:var(--green);}
+  .dot{width:1.1vh;height:1.1vh;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(34,199,134,.7);animation:pulse 1.8s infinite;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(34,199,134,.6);}70%{box-shadow:0 0 0 1.4vh rgba(34,199,134,0);}100%{box-shadow:0 0 0 0 rgba(34,199,134,0);}}
+
+  /* ===== KPI ROW ===== */
+  .kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:1vw;height:27vh;margin-top:1.4vh;}
+  .kpi{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);
+       border-radius:1.4vh;padding:1.8vh 1.4vw;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;}
+  .kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:.6vh;background:var(--blue);}
+  .kpi.k-green::before{background:var(--green);} .kpi.k-amber::before{background:var(--amber);}
+  .kpi.k-red::before{background:var(--red);} .kpi.k-yellow::before{background:var(--yellow);}
+  .kpi .lbl{font-size:1.45vh;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1.5px;}
+  .kpi .val{font-size:7vh;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;}
+  .kpi .foot{font-size:1.4vh;color:var(--dim);display:flex;align-items:center;gap:.4vw;}
+  .kpi .trend{font-weight:800;}
+  .up{color:var(--green);} .down{color:var(--red);} .warn{color:var(--amber);}
+  .val.green{color:var(--green);} .val.amber{color:var(--amber);} .val.red{color:var(--red);} .val.white{color:var(--txt);} .val.yellow{color:var(--yellow);}
+
+  /* ===== MIDDLE ===== */
+  .mid{display:grid;grid-template-columns:1.55fr 1fr;gap:1vw;flex:1;margin-top:1.4vh;min-height:0;}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:1.4vh;padding:1.6vh 1.4vw;display:flex;flex-direction:column;min-height:0;}
+  .panel h3{font-size:1.6vh;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:1.2vh;display:flex;justify-content:space-between;align-items:center;}
+  .panel h3 .meta{color:var(--dim);font-weight:600;letter-spacing:0;text-transform:none;font-size:1.4vh;}
+
+  /* queue table */
+  table{width:100%;border-collapse:collapse;}
+  thead th{font-size:1.35vh;color:var(--dim);text-transform:uppercase;letter-spacing:1px;text-align:right;padding:0 .8vw 1vh;font-weight:700;}
+  thead th.l{text-align:left;}
+  tbody td{font-size:2.2vh;font-weight:700;text-align:right;padding:1.15vh .8vw;border-top:1px solid var(--line);font-variant-numeric:tabular-nums;}
+  tbody td.l{text-align:left;font-size:2vh;}
+  tbody td .q{display:flex;align-items:center;gap:.7vw;}
+  .dotq{width:1vh;height:1vh;border-radius:50%;}
+  .pill{display:inline-block;min-width:5vw;padding:.4vh 0;border-radius:.8vh;font-weight:800;font-size:1.9vh;}
+  .pill.green{background:rgba(34,199,134,.16);color:var(--green);}
+  .pill.amber{background:rgba(255,176,32,.16);color:var(--amber);}
+  .pill.red{background:rgba(255,77,94,.18);color:var(--red);}
+
+  /* agent status */
+  .agw{display:flex;flex-direction:column;gap:1.3vh;flex:1;justify-content:center;}
+  .arow{display:flex;align-items:center;gap:1vw;}
+  .arow .nm{width:9vw;font-size:1.7vh;color:var(--muted);font-weight:700;}
+  .bar{flex:1;height:2.6vh;background:var(--panel2);border-radius:.8vh;overflow:hidden;position:relative;}
+  .bar i{display:block;height:100%;border-radius:.8vh;transition:width .8s ease;}
+  .arow .ct{width:3vw;text-align:right;font-size:2.2vh;font-weight:800;font-variant-numeric:tabular-nums;}
+  .b-green{background:linear-gradient(90deg,#1B9E6B,var(--green));}
+  .b-blue{background:linear-gradient(90deg,#2C7FCC,var(--blue));}
+  .b-amber{background:linear-gradient(90deg,#CC8A12,var(--amber));}
+  .b-gray{background:linear-gradient(90deg,#3A4252,#5C6678);}
+
+  /* ===== TICKER ===== */
+  .ticker{height:5.2vh;margin-top:1.2vh;background:var(--panel);border:1px solid var(--line);border-radius:1.2vh;
+          display:flex;align-items:center;overflow:hidden;position:relative;}
+  .ticker .tag{background:var(--yellow);color:#0B0E14;font-weight:900;font-size:1.5vh;letter-spacing:1px;
+               padding:0 1.2vw;height:100%;display:flex;align-items:center;text-transform:uppercase;flex-shrink:0;}
+  .track{display:flex;align-items:center;white-space:nowrap;animation:scroll 38s linear infinite;padding-left:100%;}
+  .track span{font-size:1.9vh;color:var(--txt);margin-right:4vw;font-weight:600;}
+  .track b{color:var(--yellow);} .track .g{color:var(--green);} .track .r{color:var(--red);}
+  @keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-100%);}}
+
+  .badge-demo{position:fixed;bottom:1vh;right:1.2vw;font-size:1.2vh;color:var(--dim);letter-spacing:.5px;}
+</style>
+</head>
+<body>
+<script src="gate.js"></script>
+
+  <!-- TOP BAR -->
+  <div class="top">
+    <div class="brand">
+      <span class="logo">VERMEER</span>
+      <span class="sub">Contact Center · Live Operations Wallboard</span>
+    </div>
+    <div class="clock">
+      <div class="live"><span class="dot"></span>LIVE</div>
+      <div>
+        <div class="time" id="clock">00:00:00</div>
+        <div class="date" id="date">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI ROW -->
+  <div class="kpis">
+    <div class="kpi k-amber"><div class="lbl">In Queue</div><div class="val amber" id="k_queue">7</div><div class="foot"><span class="trend warn" id="k_queue_t">▲ 2</span> vs 5 min ago</div></div>
+    <div class="kpi k-green"><div class="lbl">Agents Available</div><div class="val green" id="k_avail">9</div><div class="foot"><span id="k_avail_f">of 14 signed in</span></div></div>
+    <div class="kpi k-red"><div class="lbl">Longest Wait</div><div class="val red" id="k_wait">01:42</div><div class="foot"><span class="trend down">▲ climbing</span></div></div>
+    <div class="kpi k-green"><div class="lbl">Service Level</div><div class="val green" id="k_sl">87%</div><div class="foot"><span id="k_sl_f">answered &lt; 30s · target 80%</span></div></div>
+    <div class="kpi k-yellow"><div class="lbl">Handled Today</div><div class="val yellow" id="k_handled">412</div><div class="foot"><span class="trend up">▲ on pace</span></div></div>
+    <div class="kpi k-green"><div class="lbl">Abandon Rate</div><div class="val green" id="k_aband">3.1%</div><div class="foot"><span id="k_aband_f">target &lt; 5%</span></div></div>
+  </div>
+
+  <!-- MIDDLE -->
+  <div class="mid">
+    <div class="panel">
+      <h3>Queues — Live <span class="meta" id="q_meta">unified skill-based routing</span></h3>
+      <table>
+        <thead><tr><th class="l">Queue</th><th>Waiting</th><th>Longest</th><th>Agents</th><th>SLA</th></tr></thead>
+        <tbody id="qbody"><!-- filled by JS --></tbody>
+      </table>
+      <div style="margin-top:auto;font-size:1.4vh;color:var(--dim);padding-top:1vh;">
+        Replaces <b style="color:var(--muted)">24 Cisco CSQs</b> · one routing engine across voice · chat · email
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Agent Status <span class="meta" id="a_meta">14 signed in</span></h3>
+      <div class="agw">
+        <div class="arow"><span class="nm">Available</span><div class="bar"><i class="b-green" id="b_avail" style="width:64%"></i></div><span class="ct" id="c_avail">9</span></div>
+        <div class="arow"><span class="nm">On Contact</span><div class="bar"><i class="b-blue" id="b_busy" style="width:21%"></i></div><span class="ct" id="c_busy">3</span></div>
+        <div class="arow"><span class="nm">Wrap-up</span><div class="bar"><i class="b-amber" id="b_wrap" style="width:7%"></i></div><span class="ct" id="c_wrap">1</span></div>
+        <div class="arow"><span class="nm">Away / Break</span><div class="bar"><i class="b-gray" id="b_away" style="width:7%"></i></div><span class="ct" id="c_away">1</span></div>
+        <div style="display:flex;justify-content:space-between;margin-top:1.4vh;padding-top:1.4vh;border-top:1px solid var(--line);">
+          <div><div style="font-size:1.4vh;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:700;">Avg Handle Time</div><div style="font-size:3.4vh;font-weight:800;" id="k_aht">5:18</div></div>
+          <div style="text-align:right;"><div style="font-size:1.4vh;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:700;">Avg Speed of Answer</div><div style="font-size:3.4vh;font-weight:800;color:var(--green);" id="k_asa">0:19</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TICKER -->
+  <div class="ticker">
+    <div class="tag">Activity</div>
+    <div class="track" id="ticker">
+      <span><b>CAS-20283</b> MACHINE DOWN · D40×55 no drilling fluid pressure — <span class="r">High</span> · assigned to Adele</span>
+      <span><b>Dealer Support</b> SLA <span class="g">met</span> · 87% answered under 30s</span>
+      <span><b>Parts / Order Status</b> queue cleared — 0 waiting</span>
+      <span>AI Voice agent <span class="g">deflected</span> 28 routine calls today</span>
+      <span><b>Escalation</b> · expert consult bridged via Teams — context carried</span>
+      <span>Knowledge <b>KA-01344</b> attached to 6 cases this hour</span>
+    </div>
+  </div>
+
+  <div class="badge-demo">Vermeer × Microsoft · illustrative live wallboard (custom Code App pattern) · simulated data</div>
+
+<script>
+  // ---- clock ----
+  function tick(){
+    const n=new Date();
+    const p=x=>String(x).padStart(2,'0');
+    document.getElementById('clock').textContent=`${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;
+    document.getElementById('date').textContent=n.toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
+  }
+  setInterval(tick,1000); tick();
+
+  // ---- helpers ----
+  const rnd=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+  const mmss=s=>`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
+
+  // ---- queue model ----
+  let queues=[
+    {n:"Dealer Support",        c:"#22C786", wait:4, long:62,  ag:5, sla:91},
+    {n:"Parts / Order Status",  c:"#3DA5FF", wait:1, long:18,  ag:3, sla:96},
+    {n:"Warranty / Machine-Down",c:"#FF4D5E",wait:2, long:102, ag:3, sla:78},
+    {n:"Escalation / Expert",   c:"#8661C5", wait:0, long:0,   ag:2, sla:99}
+  ];
+  function slaCls(v){return v>=85?'green':v>=75?'amber':'red';}
+  function waitCls(s){return s<45?'green':s<90?'amber':'red';}
+  function renderQueues(){
+    const tb=document.getElementById('qbody'); tb.innerHTML='';
+    queues.forEach(q=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML=`
+        <td class="l"><div class="q"><span class="dotq" style="background:${q.c}"></span>${q.n}</div></td>
+        <td><span class="pill ${q.wait===0?'green':waitCls(q.long)}">${q.wait}</span></td>
+        <td>${q.long===0?'—':mmss(q.long)}</td>
+        <td>${q.ag}</td>
+        <td><span class="pill ${slaCls(q.sla)}">${q.sla}%</span></td>`;
+      tb.appendChild(tr);
+    });
+  }
+  renderQueues();
+
+  // ---- KPI live walk ----
+  let st={queue:7,avail:9,busy:3,wrap:1,away:1,wait:102,sl:87,handled:412,aband:3.1,aht:318,asa:19};
+  function setVal(id,v,cls){const e=document.getElementById(id);e.textContent=v;if(cls){e.className='val '+cls;}}
+  function refresh(){
+    // queues drift
+    queues.forEach(q=>{
+      q.wait=clamp(q.wait+rnd(-1,1),0,9);
+      q.long=q.wait===0?0:clamp(q.long+rnd(-8,10),5,260);
+      q.sla=clamp(q.sla+rnd(-2,2),70,99);
+    });
+    renderQueues();
+    // aggregate
+    st.queue=queues.reduce((a,q)=>a+q.wait,0);
+    const longest=Math.max(...queues.map(q=>q.long));
+    st.avail=clamp(st.avail+rnd(-1,1),5,12);
+    st.busy=clamp(14-st.avail-st.wrap-st.away,0,9);
+    st.wrap=clamp(st.wrap+rnd(-1,1),0,3);
+    st.away=clamp(14-st.avail-st.busy-st.wrap,0,4);
+    st.sl=clamp(st.sl+rnd(-2,2),74,96);
+    st.handled+=rnd(0,3);
+    st.aband=clamp(st.aband+(Math.random()-0.5)*0.4,1.2,6);
+    st.aht=clamp(st.aht+rnd(-6,6),250,400);
+    st.asa=clamp(st.asa+rnd(-3,3),8,55);
+
+    setVal('k_queue',st.queue, st.queue>8?'red':st.queue>5?'amber':'green');
+    document.getElementById('k_queue_t').textContent = (st.queue>=6?'▲ ':'▼ ')+Math.abs(st.queue-5);
+    setVal('k_avail',st.avail,'green');
+    document.getElementById('k_avail_f').textContent=`of 14 signed in`;
+    setVal('k_wait',mmss(longest), longest>90?'red':longest>45?'amber':'green');
+    setVal('k_sl',st.sl+'%', st.sl>=85?'green':st.sl>=80?'amber':'red');
+    setVal('k_handled',st.handled,'yellow');
+    setVal('k_aband',st.aband.toFixed(1)+'%', st.aband<4?'green':st.aband<5?'amber':'red');
+    document.getElementById('k_aht').textContent=mmss(st.aht);
+    document.getElementById('k_asa').textContent='0:'+String(st.asa).padStart(2,'0');
+
+    // agent bars
+    const tot=st.avail+st.busy+st.wrap+st.away||1;
+    document.getElementById('b_avail').style.width=(st.avail/tot*100)+'%';
+    document.getElementById('b_busy').style.width=(st.busy/tot*100)+'%';
+    document.getElementById('b_wrap').style.width=(st.wrap/tot*100)+'%';
+    document.getElementById('b_away').style.width=(st.away/tot*100)+'%';
+    document.getElementById('c_avail').textContent=st.avail;
+    document.getElementById('c_busy').textContent=st.busy;
+    document.getElementById('c_wrap').textContent=st.wrap;
+    document.getElementById('c_away').textContent=st.away;
+    document.getElementById('a_meta').textContent=`${tot} signed in`;
+  }
+  refresh();
+  setInterval(refresh,2600);
+</script>
+</body>
+</html>
