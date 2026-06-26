@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Vermeer × Microsoft — Why Microsoft &amp; the Ecosystem</title>
+<style>
+  :root{
+    --coral:#F4364C; --magenta:#C03BC4; --purple:#8661C5; --orange:#FF5C39;
+    --ink:#1A1320; --cream:#FFF8F3; --surface:#FFFFFF; --line:#ECE2DA; --gray:#6B6470;
+    --green:#1E7A52; --greenbg:#E7F4ED;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  body{ font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif; color:var(--ink);
+        background:var(--cream); line-height:1.55; }
+  a{ color:var(--coral); }
+  .wrap{ max-width:920px; margin:0 auto; padding:0 28px; }
+
+  .hero{ background:var(--ink); color:#fff; padding:54px 0 46px; position:relative; overflow:hidden; }
+  .hero .dot1{ position:absolute; top:-90px; right:-40px; width:280px; height:280px; border-radius:50%; background:var(--purple); opacity:.9; }
+  .hero .dot2{ position:absolute; top:40px; right:130px; width:140px; height:140px; border-radius:50%; background:var(--magenta); opacity:.85; }
+  .hero .inner{ position:relative; z-index:2; }
+  .eyebrow{ font-size:13px; font-weight:700; letter-spacing:2px; color:#CDB6F0; text-transform:uppercase; }
+  .hero h1{ font-size:38px; font-weight:300; margin:14px 0 8px; max-width:720px; }
+  .hero h1 b{ font-weight:700; }
+  .hero p{ color:#D9D2DE; font-size:17px; max-width:660px; }
+
+  .section{ padding:40px 0; border-bottom:1px solid var(--line); }
+  .kicker{ font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--purple); }
+  h2{ font-size:25px; font-weight:700; margin:8px 0 14px; }
+  p.lead{ font-size:16px; color:#3a3340; max-width:780px; }
+
+  /* pull-quote */
+  .pq{ background:var(--surface); border:1px solid var(--line); border-left:5px solid var(--coral);
+       border-radius:14px; padding:24px 26px; margin:6px 0 0; box-shadow:0 1px 3px rgba(0,0,0,.04); }
+  .pq .q{ font-size:20px; font-weight:300; font-style:italic; color:var(--ink); line-height:1.5; }
+  .pq .q b{ font-weight:700; font-style:normal; }
+  .pq .by{ font-size:13px; color:var(--gray); margin-top:12px; }
+
+  /* idea cards */
+  .igrid{ display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin-top:22px; }
+  .icard{ background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:22px; box-shadow:0 1px 3px rgba(0,0,0,.04); }
+  .icard .ic{ width:44px; height:44px; border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:21px; color:#fff; margin-bottom:13px; }
+  .icard h3{ font-size:17px; font-weight:700; margin-bottom:6px; }
+  .icard p{ font-size:13.5px; color:var(--gray); }
+  .icard p b{ color:var(--ink); }
+  .c-coral{ background:var(--coral); } .c-mag{ background:var(--magenta); } .c-pur{ background:var(--purple); } .c-org{ background:var(--orange); }
+
+  /* contrast strip */
+  .ba{ display:grid; grid-template-columns:1fr auto 1fr; gap:18px; align-items:stretch; margin-top:20px; }
+  .ba .col{ border-radius:14px; padding:20px 22px; }
+  .ba .old{ background:#F6EEEA; border:1px solid #E7D3C9; }
+  .ba .new{ background:var(--greenbg); border:1px solid #BFE3CF; }
+  .ba .lab{ font-size:11px; font-weight:800; letter-spacing:.6px; text-transform:uppercase; margin-bottom:10px; }
+  .ba .old .lab{ color:#9a4a2f; } .ba .new .lab{ color:var(--green); }
+  .ba ul{ list-style:none; }
+  .ba li{ font-size:13.5px; padding:5px 0 5px 20px; position:relative; }
+  .ba .old li::before{ content:"✕"; position:absolute; left:0; color:#c0613f; font-weight:700; }
+  .ba .new li::before{ content:"✓"; position:absolute; left:0; color:var(--green); font-weight:700; }
+  .ba .arr{ display:flex; align-items:center; font-size:26px; color:var(--gray); }
+
+  .close{ background:var(--ink); color:#fff; border-radius:16px; padding:30px 32px; margin-top:8px; }
+  .close .big{ font-size:23px; font-weight:300; line-height:1.4; }
+  .close .big b{ font-weight:700; }
+  .close .sub{ color:#C9C0D2; font-size:14px; margin-top:10px; }
+
+  footer{ padding:26px 0 40px; color:var(--gray); font-size:13px; }
+
+  @media (max-width:760px){
+    .igrid{ grid-template-columns:1fr; }
+    .ba{ grid-template-columns:1fr; } .ba .arr{ transform:rotate(90deg); justify-self:start; }
+    .hero h1{ font-size:30px; }
+  }
+</style>
+</head>
+<body>
+<script src="gate.js"></script>
+
+  <header class="hero">
+    <div class="dot1"></div><div class="dot2"></div>
+    <div class="wrap inner">
+      <div class="eyebrow">Vermeer × Microsoft · Our point of view</div>
+      <h1>Why <b>Microsoft</b>, and why the <b>ecosystem</b> is the answer</h1>
+      <p>The platform you saw isn't a single application — it's a connected ecosystem with shared context. That's what makes the AI useful, and it's the difference between solving the problem and recreating it.</p>
+    </div>
+  </header>
+
+  <!-- THE CORE IDEA -->
+  <section class="section">
+    <div class="wrap">
+      <div class="kicker">The core idea</div>
+      <h2>Context is the piece that's big</h2>
+      <p class="lead">When an interaction comes in, the system already knows who the customer is and what they have — no guessing, no hunting across screens. That awareness isn't a feature you bolt on; it comes from one platform and one data model that every channel and every agent shares.</p>
+      <div class="pq" style="margin-top:20px">
+        <div class="q">"This is customer X and these are the orders they have — I don't have to guess. It's a short path to the process. <b>The context is the piece that's big.</b> You already see the data with the awareness — other systems can import it, but they can't understand <i>why</i> to use it."</div>
+        <div class="by">— from the live demo close</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY IT MATTERS -->
+  <section class="section">
+    <div class="wrap">
+      <div class="kicker">What this changes</div>
+      <h2>Four shifts that come for free with the ecosystem</h2>
+      <div class="igrid">
+        <div class="icard">
+          <div class="ic c-coral">🧠</div>
+          <h3>Self-aware, not siloed</h3>
+          <p>If every system is its own AI island, you're back to the old problem — you <b>can't solve a problem the AI isn't aware of.</b> One connected platform means the AI sees the whole picture, not a fragment.</p>
+        </div>
+        <div class="icard">
+          <div class="ic c-mag">🎯</div>
+          <h3>One experience, not ten places</h3>
+          <p>The goal is to <b>not have your people in ten places at once</b> — that's hard to live with. A unified workspace puts the call, the chat, the case, the knowledge, and the AI in one pane.</p>
+        </div>
+        <div class="icard">
+          <div class="ic c-pur">🪟</div>
+          <h3>Meet the user where they are</h3>
+          <p>The UI can be Dynamics, your own app, Teams, or a web app — it doesn't matter. With a <b>human-in-the-loop</b> architecture already in place, the ecosystem gives you a way to deliver the moment to the user wherever they work.</p>
+        </div>
+        <div class="icard">
+          <div class="ic c-org">🏗️</div>
+          <h3>Twenty years of foundation</h3>
+          <p>This is an <b>Azure-to-desktop ecosystem</b> built over two decades — the security, identity, data, and tooling are already there. The AI lights up on top of it, rather than being a new stack you have to assemble.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OLD VS NEW -->
+  <section class="section">
+    <div class="wrap">
+      <div class="kicker">The shift, plainly</div>
+      <h2>From a stack of silos to a connected system</h2>
+      <div class="ba">
+        <div class="col old">
+          <div class="lab">Point tools, bolted together</div>
+          <ul>
+            <li>Each app has its own AI — none sees the whole customer</li>
+            <li>Agents hop across ten screens to assemble context</li>
+            <li>Data gets imported, but the system can't reason about <i>why</i></li>
+            <li>Every integration is another thing to build and maintain</li>
+          </ul>
+        </div>
+        <div class="arr">→</div>
+        <div class="col new">
+          <div class="lab">One ecosystem, shared context</div>
+          <ul>
+            <li>One data model — the AI is aware of everything it's connected to</li>
+            <li>One workspace — the context is already on the screen</li>
+            <li>The system understands the data, so the AI acts with intent</li>
+            <li>Out of the box — configured, not coded</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OOTB -->
+  <section class="section">
+    <div class="wrap">
+      <div class="kicker">And to be clear</div>
+      <h2>Everything we showed is out of the box</h2>
+      <p class="lead">No custom development was required to make the demo sing. The platform is configured by service people, not coded by developers — which means your team can own it, evolve it, and trust that what you saw on screen is what you'd run.</p>
+      <div class="pq" style="margin-top:20px">
+        <div class="q">"Everything I showed is out of the box. I'm a customer-service guy — I could configure this all day and make it sing. <b>And I'm not a developer; I can't code.</b>"</div>
+        <div class="by">— from the live demo close</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLOSE -->
+  <section class="section" style="border-bottom:none">
+    <div class="wrap">
+      <div class="close">
+        <div class="big">The ecosystem is what matters. <b>One platform, one data model, one Copilot</b> — aware of the whole customer, delivered wherever your people work, and ready out of the box.</div>
+        <div class="sub">We'd welcome the next conversation — scoping the proof, the cost picture, and the path to go-live on your timeline.</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <b>Microsoft</b> &nbsp;·&nbsp; Prepared for Vermeer Corporation &nbsp;·&nbsp; Our perspective on Dynamics 365 Contact Center &amp; the Microsoft Cloud ecosystem.
+    </div>
+  </footer>
+
+</body>
+</html>
